@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="languages">
+        <item>Language1</item>
+        <item>Language2</item>
+        <!-- Add more languages as needed -->
+    </string-array>
+</resources>

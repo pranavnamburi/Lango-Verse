@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">langoverse</string>
+    <string name="voice_translation">Voice Translation</string>
+    <string name="text_translation">Text Translation</string>
+    <string name="view_history">View History</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="send_email">Send Email</string>
+    <string name="login">Login</string>
+    <string name="don_t_have_an_account_register_here">Don\'t have an account? Register here.</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="english">English</string>
+    <string name="hindi">Hindi</string>
+    <string name="translate">Translate</string>
+    <string name="enter_english">Enter English</string>
+    <string name="register">Register</string>
+    <string name="already_have_an_account_login_here">Already have an account? Login here.</string>
+    <string name="login_here">Login here.</string>
+    <string name="logout">LogOut..</string>
+    <string name="g">𝕷𝖎𝖓𝖌𝖔</string>
+    <string name="speak_result">Speak Result</string>
+    <string name="enter_text_to_translate">Enter text to translate...</string>
+    <string name="failed_to_translate">Failed to translate due to %s</string>
+    <string name="failed_to_ready_model">Failed to ready model due to %s</string>
+    <string name="no_text_to_speak">No text to speak</string>
+    <string name="speak_out">Speak Out</string>
+
+</resources>
