@@ -25,12 +25,10 @@ public class HomeActivity extends AppCompatActivity {
         BtnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth = FirebaseAuth.getInstance();
-                mAuth.signOut();
                 Intent intent =new Intent(HomeActivity.this,LoginActivity.class);
                 startActivity(intent);
                 finish();
-                Toast.makeText(HomeActivity.this,"Logged Out SuccessFull", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this,"Logged Out SuccessFully", Toast.LENGTH_SHORT).show();
 
             }
         });

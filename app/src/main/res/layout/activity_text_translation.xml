@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:text="Speak Out"
                     android:layout_marginTop="15dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     android:layout_toEndOf="@id/speakResultBtn"
                     android:layout_alignTop="@id/speakResultBtn"/>
