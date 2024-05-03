@@ -7,13 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,13 +17,22 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.mail.Authenticator;
-import androidx.annotation.Nullable;
+
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
     ConnectionClass connectionClass;
@@ -105,9 +108,51 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
 
     private void sendEmail(String password) {
-        runOnUiThread(() -> {
-            Toast.makeText(this, password, Toast.LENGTH_SHORT).show();
+         try{
+        String stringSenderEmail = "langoverse0@gmail.com";
+        String stringReceiverEmail = emailEditText.getText().toString().trim();
+        String stringSubject = "Password Recovery - Langoverse";
+        String stringMessage = "Your password for Accessing LangoVerse is: \n" + password;
+        String stringPasswordSenderEmail = "dcvbwcjcbgoynsmf";
+        String stringHost = "smtp.gmail.com";
+
+        Properties properties = System.getProperties();
+
+        properties.put("mail.smtp.host", stringHost);
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.auth", "true");
+
+        javax.mail.Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(stringSenderEmail, stringPasswordSenderEmail);
+            }
         });
+
+        MimeMessage mimeMessage = new MimeMessage(session);
+        mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(stringReceiverEmail));
+        mimeMessage.setSubject(stringSubject);
+        mimeMessage.setText(stringMessage);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Transport.send(mimeMessage);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+         } catch (AddressException e) {
+             e.printStackTrace();
+         } catch (MessagingException e) {
+             e.printStackTrace();
+         }
+
+        runOnUiThread(() -> Toast.makeText(this, "Email Sent Successfully!!!, Please check your Email.", Toast.LENGTH_SHORT).show());
 
         navigateToLogin();
     }
