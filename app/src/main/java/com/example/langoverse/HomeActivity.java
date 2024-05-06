@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity {
-
+    User user;
     private Button BtnLogout;
     private FirebaseAuth mAuth;
 
@@ -25,6 +25,8 @@ public class HomeActivity extends AppCompatActivity {
         BtnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                user.setEmail(null);
+                User.getInstance().setEmail(null);
                 Intent intent =new Intent(HomeActivity.this,LoginActivity.class);
                 startActivity(intent);
                 finish();

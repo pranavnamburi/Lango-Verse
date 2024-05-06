@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -32,12 +33,21 @@ import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class VoiceTranslationActivity extends AppCompatActivity {
 
+
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    ConnectionClass connectionClass;
     private TextView sourceLanguage;
     private MaterialButton sourceLanguageChooseBtn;
     private MaterialButton destinationLanguageChooseBtn;
@@ -135,6 +145,7 @@ public class VoiceTranslationActivity extends AppCompatActivity {
                 }
             }
         });
+        connectionClass = new ConnectionClass();
 
 //        speakOutBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -189,9 +200,17 @@ public class VoiceTranslationActivity extends AppCompatActivity {
 
                                         // Display the translated text in destinationLanguageTv
                                         destinationLanguageTv.setText(translatedText);
+                                        long currentTimeMillis = System.currentTimeMillis();
+                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                        Date resultdate = new Date(currentTimeMillis);
+
+                                        addHistoryToDB(User.getInstance().getEmail(), sourceLanguageTitle, sourceLanguage.getText().toString().trim(), translatedText, destinationLanguageTitle, sdf.format(resultdate));
+
 
                                         // Speak out the translated text
                                         speakOutTranslatedText();
+
+
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -375,5 +394,38 @@ public class VoiceTranslationActivity extends AppCompatActivity {
             ModelLanguage modelLanguage = new ModelLanguage(languageCode, languageTitle);
             languageArrayList.add(modelLanguage);
         }
+    }
+    private void addHistoryToDB(String userEmail, String sourceLanguage, String targetLanguage, String sourceText, String targetText, String date) {
+        executorService.execute(() -> {
+            try (Connection conn = connectionClass.CONN()) {
+                if (conn == null) {
+                    throw new SQLException("Failed to establish connection");
+                }
+
+                String sql = "insert into translatedb values(?,?,?,?,?,?)";
+                try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                    statement.setString(1, userEmail);
+                    statement.setString(4, sourceText);
+                    statement.setString(3, sourceLanguage);
+                    statement.setString(5, targetText);
+                    statement.setString(2, targetLanguage);
+                    statement.setString(6, date);
+
+                    int rowsInserted = statement.executeUpdate();
+                    if (rowsInserted > 0) {
+                        this.runOnUiThread(() -> {
+                            Toast.makeText(this, "History added successfully", Toast.LENGTH_SHORT).show();
+                        });
+                    } else {
+                        this.runOnUiThread(() -> Toast.makeText(this, "History addition failed", Toast.LENGTH_SHORT).show());
+                    }
+                } catch (Exception e) {
+                    this.runOnUiThread(() -> Toast.makeText(this, "Error occurred: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

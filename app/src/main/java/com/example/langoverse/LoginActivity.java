@@ -27,6 +27,7 @@ import java.util.concurrent.Executors;
 
 public class LoginActivity extends AppCompatActivity {
     ConnectionClass connectionClass;
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
     Connection con;
     String str;
     private EditText emailEditText, passwordEditText;
@@ -35,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView forgotTextView;
     private PreparedStatement statement;
     private FirebaseAuth mAuth;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,11 @@ public class LoginActivity extends AppCompatActivity {
 //            // User is already logged in, navigate to the home page
 //            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
 //            finish(); // Finish this activity to prevent going back to the login screen
+//        }
+//        User user = User.getInstance();
+//        if (user.getEmail() != null) {
+//            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+//            finish();
 //        }
 
         // Find UI components
@@ -83,31 +91,9 @@ public class LoginActivity extends AppCompatActivity {
                 navigateToForgotPassword();
             }
         });
-        connect();
 
     }
-    public void connect(){
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(() -> {
-            try {
-                con = connectionClass.CONN();
-                if (con == null) {
-                    str = "Error in connection with SQL server";
-                } else {
-                    str = "Connection with MySQL server";
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            runOnUiThread(() -> {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
-        });
-    }
+
 
     private void loginUser() {
         String email = emailEditText.getText().toString().trim();
@@ -134,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                });
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
         executorService.execute(() -> {
             try {
                 Connection con = connectionClass.CONN();
@@ -149,10 +135,12 @@ public class LoginActivity extends AppCompatActivity {
 
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
+                    User.getInstance().setEmail(email);
+//                    runOnUiThread(()->{user.setEmail(email);});
                     runOnUiThread(() -> {
 
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                        finish();
+
                     });
                 } else {
                     runOnUiThread(() -> {
@@ -166,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
             }
-        });
+        });executorService.shutdown();
 
     }
 

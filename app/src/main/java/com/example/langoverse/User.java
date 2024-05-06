@@ -1,21 +1,18 @@
 package com.example.langoverse;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 public class User {
-    private String username;
+    private static User instance;
     private String email;
 
-    public User() {}
+    private User() {}  // Private constructor to prevent instantiation
 
-    public User(String username, String email) {
-        this.username = username;
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public static synchronized User getInstance() {
+        if (instance == null) {
+            instance = new User();
+        }
+        return instance;
     }
 
     public String getEmail() {
@@ -26,3 +23,4 @@ public class User {
         this.email = email;
     }
 }
+

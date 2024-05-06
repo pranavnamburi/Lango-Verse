@@ -85,6 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
                 runOnUiThread(() -> Toast.makeText(this, "Error occurred: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
+        executorService.shutdown();
     }
 
     private void navigateToLogin() {
