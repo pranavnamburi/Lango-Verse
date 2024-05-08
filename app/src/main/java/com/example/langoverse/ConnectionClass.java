@@ -9,10 +9,10 @@ import java.sql.DriverManager;
 import java.util.Objects;
 
 public class ConnectionClass {
-protected final String db="translate_1";
-protected final String un="root";
-protected final String password="root_123";
-protected final String ip="translateapp-1.crwkm4kk2qu6.ap-south-1.rds.amazonaws.com";
+protected final String db="YOUR-DB-NAME";
+protected final String un="DB_USERNAME";
+protected final String password="DB-PASSWORD";
+protected final String ip="IP/WEB-LINK OF DB";
 protected final String port="3306";
 public Connection CONN(){
 
