@@ -109,11 +109,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private void sendEmail(String password) {
          try{
-        String stringSenderEmail = "langoverse0@gmail.com";
+        String stringSenderEmail = "YOUR-EMAIL";
         String stringReceiverEmail = emailEditText.getText().toString().trim();
         String stringSubject = "Password Recovery - Langoverse";
         String stringMessage = "Your password for Accessing LangoVerse is: \n" + password;
-        String stringPasswordSenderEmail = "dcvbwcjcbgoynsmf";
+        String stringPasswordSenderEmail = "dcvbwcjcbgoynsmf -apppassword";
         String stringHost = "smtp.gmail.com";
 
         Properties properties = System.getProperties();
